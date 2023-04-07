@@ -1,6 +1,7 @@
-import NavBar from "components/NavBar/NavBar"
-import Link from "next/link"
 import { useEffect, useState } from "react"
+import { Loading } from "@nextui-org/react"
+import { Card, Col, Text, Row, Button, Grid } from "@nextui-org/react";
+import Link from "next/link";
 
 const Home = () => {
 
@@ -13,26 +14,86 @@ const Home = () => {
   const getProducts = () => {
     fetch('/api/avo')
       .then(res => res.json())
-      .then(({ data }) => setProductList(data))
+      .then(({ data }: TAPIAvoResponse) => setProductList(data))
       .catch(err => console.log(err))
   }
 
   return (
-    <div>
-      <NavBar />
-      <h1>Hola mundo! Soy Ivan</h1>
+    <div style={{ marginTop: '15px' }}>
       {
-        productList.map(({ name, id, attributes }) => {
-          return (
-            <div key={id}>
-              <h1>{name}</h1>
-              <p>{attributes.description}</p>
-              <Link href={`/product/${id}`}>Go to details</Link>
-            </div>
-          )
-        })
+        productList.length > 0 ?
+          <Grid.Container gap={2} justify="center">
+            {
+              productList.map(({ name, id, image, price }) => {
+                return (
+                  <Grid key={id} sm={4}>
+                    <Card>
+                      <Card.Image
+                        src={image}
+                        objectFit="cover"
+                        width="100%"
+                        height={340}
+                        alt={name}
+                      />
+                      <Card.Footer
+                        isBlurred
+                        css={{
+                          position: "absolute",
+                          bgBlur: "#ffffff66",
+                          borderTop: "$borderWeights$light solid green",
+                          bottom: 0,
+                          zIndex: 1,
+                        }}
+                      >
+                        <Row>
+                          <Col>
+                            <Row>
+                              <Col>
+                                <Text color="black" size={20}>
+                                  {name}
+                                </Text>
+                                <Text color="green" size={12}>
+                                  {price}
+                                </Text>
+                              </Col>
+                            </Row>
+                          </Col>
+                          <Col>
+                            <Row justify="flex-end">
+                              <Button
+                                flat
+                                auto
+                                rounded
+                                bordered
+                                borderWeight={'light'}
+                                color={'success'}
+                              >
+                                <Link href={`/product/${id}`}>
+                                  <Text
+                                    css={{ color: "green" }}
+                                    size={12}
+                                    weight="bold"
+                                    transform="uppercase"
+                                  >
+                                    Details
+                                  </Text>
+                                </Link>
+                              </Button>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Card.Footer>
+                    </Card>
+                  </Grid>
+                )
+              })
+            }
+
+          </Grid.Container >
+          :
+          <Loading type='points' />
       }
-    </div>
+    </div >
   )
 }
 
