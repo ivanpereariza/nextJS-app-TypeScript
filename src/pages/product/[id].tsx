@@ -1,26 +1,37 @@
-import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { Button, Col, Container, Loading, Row, Table, Text } from "@nextui-org/react"
+import { Col, Container, Loading, Row, Table } from "@nextui-org/react"
+import { GetStaticPaths, GetStaticProps } from "next"
 
-const ProductItem = () => {
 
-  const { query: { id } } = useRouter()
+export const getStaticPaths: GetStaticPaths = async () => {
 
-  const [product, setProduct] = useState<TProduct>()
+  const res = await fetch(`${process.env.API_HOST}/api/avo`)
+  const { data }: TAPIAvoResponse = await res.json()
 
-  useEffect(() => {
-    getDetails()
-  }, [id])
+  const paths = data.map(({ id }) => {
+    return {
+      params: {
+        id
+      }
+    }
+  })
 
-  const getDetails = () => {
-    fetch(`/api/avo/${id}`)
-      .then(res => res.json())
-      .then(({ data }) => setProduct(data))
-      .catch(err => console.log(err))
+  return { paths, fallback: 'blocking' }
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+
+  const res = await fetch(`${process.env.API_HOST}/api/avo/${params?.id}`)
+  const { data }: { data: TProduct } = await res.json()
+
+  return {
+    props: {
+      product: data
+    }
   }
+}
 
+const ProductItem = ({ product }: { product: TProduct }) => {
 
   return (
     <>

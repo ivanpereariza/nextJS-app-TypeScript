@@ -1,27 +1,26 @@
-import { useEffect, useState } from "react"
 import { Loading } from "@nextui-org/react"
 import { Card, Col, Text, Row, Button, Grid } from "@nextui-org/react";
 import Link from "next/link";
 
-const Home = () => {
 
-  const [productList, setProductList] = useState<TProduct[]>([])
+export const getStaticProps = async () => {
 
-  useEffect(() => {
-    getProducts()
-  }, [])
+  const res = await fetch(`${process.env.API_HOST}/api/avo`)
+  const { data }: TAPIAvoResponse = await res.json()
 
-  const getProducts = () => {
-    fetch('/api/avo')
-      .then(res => res.json())
-      .then(({ data }: TAPIAvoResponse) => setProductList(data))
-      .catch(err => console.log(err))
+  return {
+    props: {
+      productList: data
+    }
   }
+}
+
+const Home = ({ productList }: { productList: TProduct[] }) => {
 
   return (
     <div style={{ marginTop: '15px' }}>
       {
-        productList.length > 0 ?
+        productList?.length > 0 ?
           <Grid.Container gap={2} justify="center">
             {
               productList.map(({ name, id, image, price }) => {
@@ -96,5 +95,6 @@ const Home = () => {
     </div >
   )
 }
+
 
 export default Home
