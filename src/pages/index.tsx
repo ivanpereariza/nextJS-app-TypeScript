@@ -1,4 +1,4 @@
-import { Loading } from "@nextui-org/react"
+import { Container, Loading } from "@nextui-org/react"
 import { Card, Col, Text, Row, Button, Grid } from "@nextui-org/react";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ export const getStaticProps = async () => {
 const Home = ({ productList }: { productList: TProduct[] }) => {
 
   return (
-    <div style={{ marginTop: '15px' }}>
+    <Container style={{ marginTop: '15px' }}>
       {
         productList?.length > 0 ?
           <Grid.Container gap={2} justify="center">
@@ -92,7 +92,7 @@ const Home = ({ productList }: { productList: TProduct[] }) => {
           :
           <Loading type='points' />
       }
-    </div >
+    </Container >
   )
 }
 

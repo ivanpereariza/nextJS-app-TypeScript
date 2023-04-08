@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Col, Container, Loading, Row, Table } from "@nextui-org/react"
+import { Col, Container, Grid, Loading, Row, Table } from "@nextui-org/react"
 import { GetStaticPaths, GetStaticProps } from "next"
 
 
@@ -38,15 +38,19 @@ const ProductItem = ({ product }: { product: TProduct }) => {
       {
         product ?
           <Container>
-            <Row style={{ marginTop: '30px' }}>
-              <Col span={3} offset={2}>
-                <Image src={product.image} alt={product.name} width={300} height={300} />
-              </Col>
-              <Col span={5}>
-                <h1>{product?.name}</h1>
-                <h2>Price: {product?.price}</h2>
-              </Col>
-            </Row>
+            <Grid.Container alignItems="center" justify='center' gap={4} style={{ marginTop: '40px' }}>
+              <Grid sm={4} >
+                <Col offset={2}>
+                  <Image src={product.image} alt={product.name} width={300} height={300} />
+                </Col>
+              </Grid>
+              <Grid sm={6}>
+                <Col>
+                  <h1>{product?.name}</h1>
+                  <h2>Price: {product?.price}</h2>
+                </Col>
+              </Grid>
+            </Grid.Container>
             <Row>
               <Col offset={2} span={8}>
                 <div>
